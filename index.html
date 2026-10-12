@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>社内専用 ガイド付き高精度AI真贋鑑定システム</title>
+  <title>社内専用 型番照合付きAI真贋鑑定システム</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // 【社内パスワード保護設定】
     const PASS = "1234";
     window.addEventListener('DOMContentLoaded', () => {
       const input = prompt("社内閲覧用パスワードを入力してください:");
@@ -19,27 +18,25 @@
 <body class="bg-gray-950 text-gray-100 min-h-screen p-4 sm:p-8">
   <div class="max-w-3xl mx-auto space-y-6">
     
-    <!-- ヘッダー -->
     <header class="border-b border-gray-800 pb-4 text-center">
-      <div class="inline-block bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 text-xs px-3 py-1 rounded-full mb-2">Guided Auth Engine v4.5 (Multi-Category)</div>
+      <div class="inline-block bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 text-xs px-3 py-1 rounded-full mb-2">Model & Serial Verification v5.0</div>
       <h1 class="text-3xl font-extrabold text-white tracking-wide">AI Brand Authenticator Pro</h1>
-      <p class="text-sm text-gray-400 mt-1">社内専用・部位指定ガイド撮影ポータル</p>
+      <p class="text-sm text-gray-400 mt-1">型番・シリアル照合機能付き 鑑定ポータル</p>
     </header>
 
-    <!-- 条件選択エリア -->
+    <!-- 1. 基本情報＆型番入力 -->
     <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800 shadow-2xl space-y-4">
-      <h2 class="text-sm font-semibold text-gray-300">1. 鑑定対象の指定</h2>
+      <h2 class="text-sm font-semibold text-gray-300">1. 商品基本情報・型番情報の入力</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs text-gray-400 mb-1">ブランド選択</label>
           <select id="brandSelect" class="w-full bg-gray-950 border border-gray-800 text-sm rounded-xl p-3 text-gray-200 focus:outline-none focus:border-yellow-500">
-            <option value="LV">ルイ・ヴィトン (Louis Vuitton)</option>
+            <option value="Louis Vuitton">ルイ・ヴィトン (Louis Vuitton)</option>
             <option value="CHANEL">シャネル (CHANEL)</option>
             <option value="HERMES">エルメス (HERMÈS)</option>
             <option value="ROLEX">ロレックス (ROLEX)</option>
             <option value="GUCCI">グッチ (GUCCI)</option>
             <option value="PRADA">プラダ (PRADA)</option>
-            <option value="CELINE">セリーヌ (CELINE)</option>
             <option value="OTHER">その他ブランド</option>
           </select>
         </div>
@@ -53,29 +50,33 @@
             <option value="accessory">小物・アクセサリー</option>
           </select>
         </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">型番 / 品番 (Ref. / Model No.)</label>
+          <input type="text" id="modelNumber" placeholder="例: M41526, 116610LN" class="w-full bg-gray-950 border border-gray-800 text-sm rounded-xl p-3 text-gray-200 focus:outline-none focus:border-yellow-500">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">シリアル / 製造番号 (Serial No.)</label>
+          <input type="text" id="serialNumber" placeholder="例: FL0021, ランダムシリアル" class="w-full bg-gray-950 border border-gray-800 text-sm rounded-xl p-3 text-gray-200 focus:outline-none focus:border-yellow-500">
+        </div>
       </div>
     </div>
 
-    <!-- 部位別画像アップロードエリア -->
+    <!-- 2. 指定部位画像のアップロード -->
     <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800 shadow-2xl space-y-4">
-      <h2 class="text-sm font-semibold text-gray-300">2. 指定部位の写真アップロード (接写・鮮明な写真を推奨)</h2>
+      <h2 class="text-sm font-semibold text-gray-300">2. 指定部位の写真アップロード</h2>
       
-      <div id="uploadSlots" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <!-- 動的スロット挿入箇所 -->
-      </div>
+      <div id="uploadSlots" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
 
       <button onclick="runGuidedAuth()" class="w-full bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-gray-950 font-extrabold py-3.5 rounded-xl shadow-lg transition transform active:scale-95 mt-4">
-        AI判定サーバーで解析を実行する
+        型番照合 & AI鑑定を実行する
       </button>
     </div>
 
-    <!-- 解析中アニメーション -->
     <div id="loading" class="hidden bg-gray-900 p-8 rounded-2xl border border-gray-800 text-center space-y-4">
       <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-yellow-500 border-t-transparent"></div>
-      <p class="text-yellow-400 text-sm font-semibold">指定アングル部位の構造・刻印・フォントエッジ比率を解析中...</p>
+      <p class="text-yellow-400 text-sm font-semibold">型番フォーマット照合 & 画像エッジ多角解析中...</p>
     </div>
 
-    <!-- 判定レポート表示エリア -->
     <div id="result" class="hidden bg-gray-900 p-6 rounded-2xl border border-gray-800 space-y-6">
       <div class="flex items-center justify-between border-b border-gray-800 pb-4">
         <div>
@@ -91,7 +92,7 @@
       <div id="alertBox" class="p-4 rounded-xl border text-sm leading-relaxed"></div>
 
       <div>
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">部位別AI分析結果</h3>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">項目別照合結果</h3>
         <div id="detailsList" class="space-y-2"></div>
       </div>
     </div>
@@ -148,8 +149,12 @@
     window.addEventListener('DOMContentLoaded', switchCategoryUI);
 
     async function runGuidedAuth() {
-      const cat = document.getElementById('categorySelect').value;
-      const slots = slotsMap[cat];
+      const brand = document.getElementById('brandSelect').value;
+      const category = document.getElementById('categorySelect').value;
+      const modelNumber = document.getElementById('modelNumber').value;
+      const serialNumber = document.getElementById('serialNumber').value;
+
+      const slots = slotsMap[category];
       const files = [];
 
       for (let s of slots) {
@@ -159,8 +164,8 @@
         }
       }
 
-      if (files.length < 2) {
-        alert("精度担保のため、最低でも2箇所以上の指定部位写真をセットしてください。（全箇所埋めると精度が最大化します）");
+      if (files.length < 1) {
+        alert("鑑定を行う画像を1枚以上アップロードしてください。");
         return;
       }
 
@@ -168,6 +173,11 @@
       document.getElementById('loading').classList.remove('hidden');
 
       const formData = new FormData();
+      formData.append('brand', brand);
+      formData.append('category', category);
+      formData.append('model_number', modelNumber);
+      formData.append('serial_number', serialNumber);
+
       for (let f of files) {
         formData.append('files', f);
       }

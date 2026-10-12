@@ -21,7 +21,7 @@
     
     <!-- ヘッダー -->
     <header class="border-b border-gray-800 pb-4 text-center">
-      <div class="inline-block bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 text-xs px-3 py-1 rounded-full mb-2">Guided Auth Engine v4.0</div>
+      <div class="inline-block bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 text-xs px-3 py-1 rounded-full mb-2">Guided Auth Engine v4.5 (Multi-Category)</div>
       <h1 class="text-3xl font-extrabold text-white tracking-wide">AI Brand Authenticator Pro</h1>
       <p class="text-sm text-gray-400 mt-1">社内専用・部位指定ガイド撮影ポータル</p>
     </header>
@@ -37,6 +37,9 @@
             <option value="CHANEL">シャネル (CHANEL)</option>
             <option value="HERMES">エルメス (HERMÈS)</option>
             <option value="ROLEX">ロレックス (ROLEX)</option>
+            <option value="GUCCI">グッチ (GUCCI)</option>
+            <option value="PRADA">プラダ (PRADA)</option>
+            <option value="CELINE">セリーヌ (CELINE)</option>
             <option value="OTHER">その他ブランド</option>
           </select>
         </div>
@@ -45,6 +48,9 @@
           <select id="categorySelect" onchange="switchCategoryUI()" class="w-full bg-gray-950 border border-gray-800 text-sm rounded-xl p-3 text-gray-200 focus:outline-none focus:border-yellow-500">
             <option value="bag">バッグ・財布</option>
             <option value="watch">腕時計</option>
+            <option value="eyewear">サングラス・メガネ</option>
+            <option value="apparel">服・アパレル</option>
+            <option value="accessory">小物・アクセサリー</option>
           </select>
         </div>
       </div>
@@ -52,7 +58,7 @@
 
     <!-- 部位別画像アップロードエリア -->
     <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800 shadow-2xl space-y-4">
-      <h2 class="text-sm font-semibold text-gray-300">2. 指定部位の写真アップロード (拡大・鮮明な写真を推奨)</h2>
+      <h2 class="text-sm font-semibold text-gray-300">2. 指定部位の写真アップロード (接写・鮮明な写真を推奨)</h2>
       
       <div id="uploadSlots" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- 動的スロット挿入箇所 -->
@@ -66,7 +72,7 @@
     <!-- 解析中アニメーション -->
     <div id="loading" class="hidden bg-gray-900 p-8 rounded-2xl border border-gray-800 text-center space-y-4">
       <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-yellow-500 border-t-transparent"></div>
-      <p class="text-yellow-400 text-sm font-semibold">指定アングル部位の構造・刻印・エッジ比率を解析中...</p>
+      <p class="text-yellow-400 text-sm font-semibold">指定アングル部位の構造・刻印・フォントエッジ比率を解析中...</p>
     </div>
 
     <!-- 判定レポート表示エリア -->
@@ -105,6 +111,24 @@
         { id: "img_back", label: "② 裏蓋刻印・シリアル" },
         { id: "img_crown", label: "③ リューズ・ロゴ刻印" },
         { id: "img_clasp", label: "④ ブレス・バックル刻印" }
+      ],
+      eyewear: [
+        { id: "img_frame", label: "① 全体・フレーム構造" },
+        { id: "img_temple", label: "② ツル内側ロゴ・型番刻印" },
+        { id: "img_lens", label: "③ レンズ刻印・透かしマーク" },
+        { id: "img_hinge", label: "④ ヒンジ (蝶番) ・金具部" }
+      ],
+      apparel: [
+        { id: "img_full", label: "① 全体写真 (シルエット・縫製)" },
+        { id: "img_brand_tag", label: "② 首元/ウエスト ブランドタグ" },
+        { id: "img_wash_tag", label: "③ 内側 品質表示・洗濯タグ" },
+        { id: "img_detail", label: "④ ボタン/ジップ/刺繍拡大" }
+      ],
+      accessory: [
+        { id: "img_acc_full", label: "① 全体写真・表面仕上げ" },
+        { id: "img_acc_stamp", label: "② ブランド刻印・ロゴ印字" },
+        { id: "img_metal_stamp", label: "③ 素材刻印 (K18/925/ホールマーク)" },
+        { id: "img_clasp_part", label: "④ 金具・留め具・フック部" }
       ]
     };
 
